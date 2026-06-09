@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Clock, Volume2, VolumeX, Pause, Play, Home, RotateCcw } from "lucide-react";
+import { Clock, Volume2, VolumeX, Pause, Play, Home, RotateCcw, ChevronDown } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SESSION_CONTEXT_STORAGE_KEY } from "@/lib/patient-session";
 import { FlowBreadcrumb } from "@/components/FlowBreadcrumb";
@@ -16,6 +16,9 @@ export const Route = createFileRoute("/ambiente")({
 function Ambiente() {
   const navigate = useNavigate();
   const [pacienteSessao, setPacienteSessao] = useState<{ nome: string; idade: number } | null>(null);
+  const environmentOptions = useMemo(() => ["Sessão individual", "Anfiteatro", "Floresta"], []);
+  const [selectedEnvironment, setSelectedEnvironment] = useState(environmentOptions[0]);
+  const [isEnvironmentDropdownOpen, setIsEnvironmentDropdownOpen] = useState(false);
   const phases = useMemo(
     () => [
       { key: "inspire", label: "Inspire", hint: "pelo nariz", seconds: 4 },
@@ -332,12 +335,51 @@ function Ambiente() {
           </div>
         </div>
 
-        {/* Tips card */}
-        <div className="absolute top-1/3 right-6 max-w-xs backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-5 text-white text-sm space-y-2">
-          <div className="font-semibold">Dicas</div>
-          <p className="opacity-90">Sinta o ar entrando…</p>
-          <p className="opacity-90">Segure por alguns segundos…</p>
-          <p className="opacity-90">E solte lentamente…</p>
+        {/* Environment card */}
+        <div className="absolute top-1/3 right-6 w-80 backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-5 text-white">
+          <div className="text-xs uppercase tracking-wider opacity-70">Ambiente terapêutico</div>
+          <h3 className="mt-1 text-lg font-semibold">Escolha um cenário</h3>
+
+          <div className="mt-4 relative">
+            <button
+              type="button"
+              onClick={() => setIsEnvironmentDropdownOpen((open) => !open)}
+              className="w-full inline-flex items-center justify-between rounded-xl bg-black/25 border border-white/25 px-3 py-2.5 text-sm font-medium text-white hover:bg-black/35 transition"
+              aria-haspopup="listbox"
+              aria-expanded={isEnvironmentDropdownOpen}
+            >
+              <span>{selectedEnvironment}</span>
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${isEnvironmentDropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {isEnvironmentDropdownOpen && (
+              <div className="absolute z-20 mt-2 w-full rounded-xl border border-white/25 bg-black/70 p-2 backdrop-blur-md space-y-2">
+                {environmentOptions.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => {
+                      setSelectedEnvironment(option);
+                      setIsEnvironmentDropdownOpen(false);
+                    }}
+                    className={`w-full rounded-lg px-3 py-2 text-left text-sm transition border ${
+                      selectedEnvironment === option
+                        ? "bg-emerald-500/30 border-emerald-300/60"
+                        : "bg-white/10 border-white/15 hover:bg-white/20"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <p className="mt-3 text-xs opacity-80">
+            Ambiente selecionado: <span className="font-semibold">{selectedEnvironment}</span>
+          </p>
         </div>
 
         {/* Controls */}
