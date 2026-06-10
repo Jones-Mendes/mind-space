@@ -357,21 +357,28 @@ function Ambiente() {
             {isEnvironmentDropdownOpen && (
               <div className="absolute z-20 mt-2 w-full rounded-xl border border-white/25 bg-black/70 p-2 backdrop-blur-md space-y-2">
                 {environmentOptions.map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => {
-                      setSelectedEnvironment(option);
-                      setIsEnvironmentDropdownOpen(false);
-                    }}
-                    className={`w-full rounded-lg px-3 py-2 text-left text-sm transition border ${
-                      selectedEnvironment === option
-                        ? "bg-emerald-500/30 border-emerald-300/60"
-                        : "bg-white/10 border-white/15 hover:bg-white/20"
-                    }`}
-                  >
-                    {option}
-                  </button>
+  <button
+    key={option}
+    type="button"
+    onClick={() => {
+      // ✅ AQUI: verifica se o nome da opção é "Anfiteatro"
+      if (option === "Anfiteatro") {
+        window.location.href = "COLE_SEU_LINK_AQUI.html"; // 👈 SUBSTITUA ESTE LINK
+        return;
+      }
+
+      setSelectedEnvironment(option);
+      setIsEnvironmentDropdownOpen(false);
+    }}
+    className={`w-full rounded-lg px-3 py-2 text-left text-sm transition border ${
+      selectedEnvironment === option
+        ? "bg-emerald-500/30 border-emerald-300/60"
+        : "bg-white/10 border-white/15 hover:bg-white/20"
+    }`}
+  >
+    {option}
+  </button>
+))}
                 ))}
               </div>
             )}
